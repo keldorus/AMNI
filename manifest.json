@@ -1,0 +1,20 @@
+{
+    "manifest_version": 2,
+    "name": "Node Debugger",
+    "version": "1.0",
+    "description": "Ouvre le debugger Node",
+    "icons": { "128": "icon.png" },
+    "browser_action": {
+        "default_title": "",
+        "default_icon": "icon.png",
+        "default_popup": "popup.html"
+    },
+    "background": {
+        "page": "background.html"
+    },
+    "permissions": [
+        "tabs",
+        "background",
+        "http://localhost/*"
+    ]
+}
