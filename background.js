@@ -5,8 +5,9 @@ const conf = {
         id    : '0',
         value : 40001
     }],
-    auto    : false,
-    refresh : 5000
+    auto      : false,
+    refresh   : 500,
+    localhost : true
 }
 
 let interval;
@@ -21,6 +22,10 @@ function createInterval() {
 
 function refresh() {
     openDebugger();
+}
+
+function changeLocalhost() {
+    conf.localhost = !conf.localhost;
 }
 
 function changeRefresh() {
@@ -59,6 +64,10 @@ function openDebugger() {
             if (resp[0].devtoolsFrontendUrl) {
                 var url = resp[0].devtoolsFrontendUrl.replace('https://chrome-devtools-frontend.appspot.com/', 'chrome-devtools://devtools/remote/');
 
+                if (conf.localhost) {
+                    url = url.replace(new RegExp(`ws=(.*):${port.value}`), `ws=127.0.0.1:${port.value}`);
+                }
+
                 if (port.url) {
                     chrome.tabs.query({
                         url : port.url
@@ -67,8 +76,6 @@ function openDebugger() {
                             chrome.tabs.create({
                                 url    : url,
                                 active : false
-                            }, (tab) => {
-                                //chrome.tabs.executeScript(tab.id,{code : `document.title = '${port.value}'`});
                             });
 
 
@@ -77,8 +84,6 @@ function openDebugger() {
                             chrome.tabs.update(tabs[0].id, {
                                 url    : url,
                                 active : false
-                            }, (tab) => {
-                                //chrome.tabs.executeScript(tab.id,{code : `document.title = '${port.value}'`});
                             });
                         }
                     });
@@ -86,8 +91,6 @@ function openDebugger() {
                     chrome.tabs.create({
                         url    : url,
                         active : false
-                    }, (tab) => {
-                        //chrome.tabs.executeScript(tab.id,{code : `document.title = '${port.value}'`});
                     });
                 }
 

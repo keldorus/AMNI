@@ -5,6 +5,7 @@ var saveInputs = conf.ports;
 document.getElementById('open').addEventListener('click', background.openDebugger);
 document.getElementById('add').addEventListener('click', addInput);
 document.getElementById('switch').addEventListener('change', background.changeRefresh);
+document.getElementById('local').addEventListener('change', background.changeLocalhost);
 document.getElementById('time').addEventListener('input', background.changeRefreshTime);
 
 restore();
@@ -13,6 +14,7 @@ restore();
 
 function restore() {
     document.getElementById('switch').checked = conf.auto;
+    document.getElementById('local').checked = conf.localhost;
     document.getElementById('time').value = conf.refresh;
 
     var addBtn = document.getElementById('add');
