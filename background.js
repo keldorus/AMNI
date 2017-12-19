@@ -3,7 +3,7 @@
 const conf = {
     ports: [{
         id    : '0',
-        value : 40001
+        value : 9229
     }],
     auto      : false,
     refresh   : 500,
