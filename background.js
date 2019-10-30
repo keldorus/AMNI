@@ -6,8 +6,7 @@ const conf = {
         value : 9229
     }],
     auto      : false,
-    refresh   : 500,
-    localhost : true
+    refresh   : 500
 }
 
 let interval;
@@ -18,14 +17,8 @@ function createInterval() {
     }, parseInt(conf.refresh, 10));
 }
 
-
-
 function refresh() {
     openDebugger();
-}
-
-function changeLocalhost() {
-    conf.localhost = !conf.localhost;
 }
 
 function changeRefresh() {
@@ -62,11 +55,7 @@ function openDebugger() {
         request(`http://localhost:${port.value}/json`)
         .then((resp) => {
             if (resp[0].devtoolsFrontendUrl) {
-                var url = resp[0].devtoolsFrontendUrl.replace('https://chrome-devtools-frontend.appspot.com/', 'chrome-devtools://devtools/remote/');
-
-                if (conf.localhost) {
-                    url = url.replace(new RegExp(`ws=(.*):${port.value}`), `ws=127.0.0.1:${port.value}`);
-                }
+                var url = resp[0].devtoolsFrontendUrl.replace('chrome-devtools://', 'devtools://');
 
                 if (port.url) {
                     chrome.tabs.query({
@@ -77,14 +66,13 @@ function openDebugger() {
                                 url    : url,
                                 active : false
                             });
-
-
-
-                        } else {
+                        } else if (port.url !== url) {
                             chrome.tabs.update(tabs[0].id, {
                                 url    : url,
                                 active : false
                             });
+
+                            port.url = url;
                         }
                     });
                 } else {
@@ -92,9 +80,9 @@ function openDebugger() {
                         url    : url,
                         active : false
                     });
-                }
 
-                port.url = url;
+                    port.url = url;
+                }
             }
         })
         .catch((err) => {
